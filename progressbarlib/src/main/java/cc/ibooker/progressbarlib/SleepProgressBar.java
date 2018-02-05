@@ -68,7 +68,7 @@ public class SleepProgressBar extends ProgressBar {
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // 画图片
-        int company = max / 7;
+        int company = max / bitmapList.size();
         if (progress <= company) {
             bitmap = bitmapList.get(0);
         } else if (progress > company && progress <= company * 2) {
