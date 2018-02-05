@@ -189,7 +189,7 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
                     } else {
                         progress.setProgress(0);
                     }
-                    // 如果手指是下滑状态，并且下拉头是完全隐藏的，或者没有达到下拉标准，就屏蔽下拉事件
+                    // 如果手指是上滑状态，并且下拉头是完全隐藏的，或者没有达到下拉标准，就屏蔽下拉事件
                     if ((distance <= 0 && headerLayoutParams.topMargin <= hideHeaderHeight)
                             || (distance < touchSlop)) {
                         return false;
