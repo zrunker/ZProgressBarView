@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <cc.ibooker.progressbarlib.SleepProgressBar
-        android:id="@+id/sleepprogressbar"
+        android:id="@+id/sleep_progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

@@ -10,6 +10,11 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
+/**
+ * 自定义进度条
+ *
+ * @author 邹峰立
+ */
 public class SleepProgressBar extends ProgressBar {
     /**
      * 画笔对象
@@ -40,9 +45,9 @@ public class SleepProgressBar extends ProgressBar {
 
     public SleepProgressBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         if (bitmapList == null)
             bitmapList = new ArrayList<>();
+        bitmapList.clear();
         bitmapList.add(BitmapFactory.decodeResource(getResources(), R.drawable.dropdown_anim_01));
         bitmapList.add(BitmapFactory.decodeResource(getResources(), R.drawable.dropdown_anim_02));
         bitmapList.add(BitmapFactory.decodeResource(getResources(), R.drawable.dropdown_anim_03));
@@ -86,7 +91,7 @@ public class SleepProgressBar extends ProgressBar {
      * 设置控件大小
      */
     @Override
-    protected synchronized void onMeasure(int widthMeasureSpec,  int heightMeasureSpec) {
+    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(bitmap.getWidth(), bitmap.getHeight());
     }
 
@@ -127,7 +132,6 @@ public class SleepProgressBar extends ProgressBar {
             this.progress = progress;
             postInvalidate();
         }
-
     }
 
 }

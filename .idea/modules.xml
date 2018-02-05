@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ZProgressBar.iml" filepath="$PROJECT_DIR$/ZProgressBar.iml" />
+      <module fileurl="file://E:\Android_Stadio\WorkSpace\ZProgressBar\ZProgressBar.iml" filepath="E:\Android_Stadio\WorkSpace\ZProgressBar\ZProgressBar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\Android_Stadio\WorkSpace\ZProgressBar\app\app.iml" filepath="E:\Android_Stadio\WorkSpace\ZProgressBar\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/progressbarlib/progressbarlib.iml" filepath="$PROJECT_DIR$/progressbarlib/progressbarlib.iml" />
+      <module fileurl="file://E:\Android_Stadio\WorkSpace\ZProgressBar\progressbarlib\progressbarlib.iml" filepath="E:\Android_Stadio\WorkSpace\ZProgressBar\progressbarlib\progressbarlib.iml" />
     </modules>
   </component>
 </project>

@@ -3,23 +3,25 @@
     android:id="@+id/load_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@null"
+    android:background="@android:color/transparent"
     android:gravity="center"
     android:orientation="horizontal"
     android:paddingBottom="10dp"
-    android:paddingTop="10dp" >
+    android:paddingTop="10dp">
 
     <ProgressBar
-        style="@android:style/Widget.ProgressBar.Small.Inverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/footer_progressbar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:indeterminateDrawable="@drawable/small_loading"
+        android:indeterminateDuration="1800" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@null"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@android:color/transparent"
         android:text="@string/loading"
         android:textColor="#555" />
 

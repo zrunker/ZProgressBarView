@@ -4,12 +4,12 @@
     android:layout_height="match_parent">
 
     <cc.ibooker.progressbarlib.PullToRefreshAndLoadView
-        android:id="@+id/navigation_pull"
+        android:id="@+id/pull"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ListView
-            android:id="@+id/navigation_listview"
+            android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="#00000000"

@@ -4,18 +4,18 @@
 
     <item
         android:drawable="@drawable/dropdown_loading_08"
-        android:duration="130"/>
+        android:duration="130" />
     <item
         android:drawable="@drawable/dropdown_loading_09"
-        android:duration="130"/>
+        android:duration="130" />
     <item
         android:drawable="@drawable/dropdown_loading_10"
-        android:duration="130"/>
+        android:duration="130" />
     <item
         android:drawable="@drawable/dropdown_loading_11"
-        android:duration="130"/>
+        android:duration="130" />
     <item
         android:drawable="@drawable/dropdown_loading_12"
-        android:duration="130"/>
+        android:duration="130" />
 
 </animation-list>

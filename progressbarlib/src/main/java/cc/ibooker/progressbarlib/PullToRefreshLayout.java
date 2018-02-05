@@ -4,6 +4,10 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,16 +16,15 @@ import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import java.lang.ref.WeakReference;
 
 /**
- * 自定义下拉刷新与加载更多控件 - 只支持ListView
+ * 自定义下拉刷新控件 - 只支持RecycleView
  *
  * @author 邹峰立
  */
-public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchListener {
+public class PullToRefreshLayout extends LinearLayout implements OnTouchListener {
     /**
      * 下拉状态
      */
@@ -82,7 +85,21 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
     /**
      * 需要去下拉刷新的mListView
      */
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
+
+    /**
+     * RecyclerView布局枚举
+     */
+    private enum LAYOUT_MANAGER_TYPE {
+        LINEAR,
+        GRID,
+        STAGGERED_GRID
+    }
+
+    /**
+     * layoutManager的类型（枚举）
+     */
+    private LAYOUT_MANAGER_TYPE layoutManagerType;
     /**
      * 当前是否可以下拉，只有mListView滚动到头的时候才允许下拉
      */
@@ -95,43 +112,26 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
      * 下拉刷新的回调接口
      */
     private PullToRefreshListener mRefreshListener;
-    /**
-     * 当前是否可以加载更多，只有mListView滚动得到底部的时候才允许
-     */
-    private boolean ableToLoad;
-    /**
-     * 加载更多的回调接口
-     */
-    private PullToLoadListener mLoadListener;
-    /**
-     * 底部布局
-     */
-    private View footer;
-    /**
-     * 布局管理器
-     */
-    private LayoutInflater inflater;
 
-    public PullToRefreshAndLoadView(Context context) {
+    public PullToRefreshLayout(Context context) {
         this(context, null);
     }
 
-    public PullToRefreshAndLoadView(Context context, AttributeSet attrs) {
+    public PullToRefreshLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PullToRefreshAndLoadView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public PullToRefreshLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         /**
          * LinearLayout相关
          */
-        inflater = LayoutInflater.from(context);
         touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();// 触发移动事件的最小距离
         setOrientation(VERTICAL);
         /**
          * 顶部布局的一些属性设置
          */
-        header = inflater.inflate(R.layout.layout_header_progress, this, false);
+        header = LayoutInflater.from(context).inflate(R.layout.layout_header_progress, this, false);
         progress = header.findViewById(R.id.sleep_progressbar);
         loadImg = header.findViewById(R.id.load_img);
         AnimationDrawable aniDrawable = (AnimationDrawable) loadImg.getDrawable();
@@ -154,14 +154,18 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
             View view = getChildAt(1);
             if (view != null) {
                 view.setOnTouchListener(this);
-                if (view instanceof ListView) {
-                    mListView = (ListView) view;
-                    /**
-                     * 底部布局的设置
-                     */
-                    footer = inflater.inflate(R.layout.layout_footer_progress, mListView, false);
-                    footer.setVisibility(View.GONE);
-                    mListView.addFooterView(footer);
+                mRecyclerView = (RecyclerView) view;
+                RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+                if (layoutManagerType == null) {
+                    if (layoutManager instanceof GridLayoutManager) {
+                        layoutManagerType = LAYOUT_MANAGER_TYPE.GRID;
+                    } else if (layoutManager instanceof LinearLayoutManager) {
+                        layoutManagerType = LAYOUT_MANAGER_TYPE.LINEAR;
+                    } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                        layoutManagerType = LAYOUT_MANAGER_TYPE.STAGGERED_GRID;
+                    } else {
+                        throw new RuntimeException("Unsupported LayoutManager used. Valid ones are LinearLayoutManager, GridLayoutManager and StaggeredGridLayoutManager");
+                    }
                 }
             }
             loadOnce = true;
@@ -172,8 +176,6 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
     public boolean onTouch(View v, MotionEvent event) {
         // 检查是否可以实现下拉刷新
         setIsAbleToPull(event);
-        // 检查是否可以实现加载更多
-        setIsAbleToLoad();
         if (ableToPull) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -218,9 +220,9 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
             if (currentStatus == STATUS_PULL_TO_REFRESH || currentStatus == STATUS_RELEASE_TO_REFRESH) {
                 updateHeaderView();
                 // 当前正处于下拉或释放状态，要让ListView失去焦点，否则被点击的那一项会一直处于选中状态
-                mListView.setPressed(false);
-                mListView.setFocusable(false);
-                mListView.setFocusableInTouchMode(false);
+                mRecyclerView.setPressed(false);
+                mRecyclerView.setFocusable(false);
+                mRecyclerView.setFocusableInTouchMode(false);
                 lastStatus = currentStatus;
                 // 当前正处于下拉或释放状态，通过返回true屏蔽掉ListView的滚动事件
                 return true;
@@ -253,10 +255,31 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
      * @param event MotionEvent事件
      */
     private void setIsAbleToPull(MotionEvent event) {
-        if (mListView != null) {
-            View firstChild = mListView.getChildAt(0);
+        if (mRecyclerView != null) {
+            View firstChild = mRecyclerView.getChildAt(0);
             if (firstChild != null) {
-                int firstVisiblePosition = mListView.getFirstVisiblePosition(); // 该方法获取当前状态下listView的第一个可见item的position
+                int firstVisiblePosition = -1;
+                switch (layoutManagerType) {
+                    case LINEAR:
+                        firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                        break;
+                    case GRID:
+                        firstVisiblePosition = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                        break;
+                    case STAGGERED_GRID:
+                        int[] firstVisibleItems;
+                        firstVisibleItems = ((StaggeredGridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPositions(null);
+                        if (firstVisibleItems != null)
+                            firstVisiblePosition = firstVisibleItems[0];
+                        else {
+                            try {
+                                throw new Exception("未获取到RecyclerView第一个可见项的位置");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
+                }
                 int top = firstChild.getTop();
                 if (firstVisiblePosition == 0 && top == 0) {// 这时候处于顶部可以进行下拉刷新
                     if (!ableToPull) {
@@ -285,71 +308,20 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
     }
 
     /**
-     * 判断是否可以进行加载更多
-     */
-    private void setIsAbleToLoad() {
-        if (ableToPull || ableToLoad) {// 判断当前是否正在进行下拉刷新或者加载更多
-            return;
-        } else {
-            int laseVisiblePosition = mListView.getLastVisiblePosition();// 该方法获取当前状态下listView的最后一个可见item的position
-            if (laseVisiblePosition == (mListView.getCount() - 1)) {
-                View lastChild = mListView.getChildAt(mListView.getLastVisiblePosition() - mListView.getFirstVisiblePosition());
-                if (lastChild != null) {
-                    ableToLoad = (mListView.getHeight() >= lastChild.getBottom());
-                }
-            }
-        }
-        // 执行加载更多
-        loadData();
-    }
-
-    /**
-     * 实现加载更多
-     */
-    public void loadData() {
-        if (ableToLoad) { // 是否可以加载更多
-            // 1、显示底部，2、实现接口
-            if (mLoadListener != null) {
-                setLoading(true);
-                mLoadListener.onLoad();
-                return;
-            }
-        }
-        setLoading(false);
-    }
-
-    /**
-     * 设置加载更多
-     *
-     * @param loading 是否正在加载更多
-     */
-    public void setLoading(boolean loading) {
-        ableToLoad = loading;
-        if (footer != null)
-            if (ableToLoad) {
-                if (footer.getVisibility() == View.GONE)
-                    footer.setVisibility(View.VISIBLE);
-            } else {
-                if (footer.getVisibility() == View.VISIBLE)
-                    footer.setVisibility(View.GONE);
-            }
-    }
-
-    /**
      * 正在刷新的任务，在此任务中会去回调注册进来的下拉刷新监听器。
      *
      * @author 邹峰立
      */
     private static class RefreshingTask extends AsyncTask<Void, Integer, Void> {
-        private final WeakReference<PullToRefreshAndLoadView> mPullToRefreshAndLoadView;
+        private final WeakReference<PullToRefreshLayout> mPullToRefreshLayout;
 
-        RefreshingTask(PullToRefreshAndLoadView pullToRefreshAndLoadView) {
-            mPullToRefreshAndLoadView = new WeakReference<>(pullToRefreshAndLoadView);
+        RefreshingTask(PullToRefreshLayout pullToRefreshLayout) {
+            mPullToRefreshLayout = new WeakReference<>(pullToRefreshLayout);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            PullToRefreshAndLoadView currentView = mPullToRefreshAndLoadView.get();
+            PullToRefreshLayout currentView = mPullToRefreshLayout.get();
             // 重置progressBar到达顶部距离 = 0
             int topMargin = currentView.headerLayoutParams.topMargin;
             while (true) {
@@ -372,7 +344,7 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
 
         @Override
         protected void onProgressUpdate(Integer... topMargin) {
-            PullToRefreshAndLoadView currentView = mPullToRefreshAndLoadView.get();
+            PullToRefreshLayout currentView = mPullToRefreshLayout.get();
             currentView.updateHeaderView();
             int marginTop = topMargin[0];
             currentView.headerLayoutParams.topMargin = marginTop;
@@ -392,15 +364,15 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
      * @author 邹峰立
      */
     private static class HideHeaderTask extends AsyncTask<Void, Integer, Integer> {
-        private final WeakReference<PullToRefreshAndLoadView> mPullToRefreshAndLoadView;
+        private final WeakReference<PullToRefreshLayout> mPullToRefreshLayout;
 
-        HideHeaderTask(PullToRefreshAndLoadView pullToRefreshAndLoadView) {
-            mPullToRefreshAndLoadView = new WeakReference<>(pullToRefreshAndLoadView);
+        HideHeaderTask(PullToRefreshLayout pullToRefreshLayout) {
+            mPullToRefreshLayout = new WeakReference<>(pullToRefreshLayout);
         }
 
         @Override
         protected Integer doInBackground(Void... params) {
-            PullToRefreshAndLoadView currentView = mPullToRefreshAndLoadView.get();
+            PullToRefreshLayout currentView = mPullToRefreshLayout.get();
             int topMargin = currentView.headerLayoutParams.topMargin;
             while (true) {
                 topMargin = topMargin + SCROLL_SPEED;
@@ -420,14 +392,14 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
 
         @Override
         protected void onProgressUpdate(Integer... topMargin) {
-            PullToRefreshAndLoadView currentView = mPullToRefreshAndLoadView.get();
+            PullToRefreshLayout currentView = mPullToRefreshLayout.get();
             currentView.headerLayoutParams.topMargin = topMargin[0];
             currentView.header.setLayoutParams(currentView.headerLayoutParams);
         }
 
         @Override
         protected void onPostExecute(Integer topMargin) {
-            PullToRefreshAndLoadView currentView = mPullToRefreshAndLoadView.get();
+            PullToRefreshLayout currentView = mPullToRefreshLayout.get();
             currentView.headerLayoutParams.topMargin = topMargin;
             currentView.header.setLayoutParams(currentView.headerLayoutParams);
             currentView.currentStatus = STATUS_REFRESH_FINISHED;
@@ -461,30 +433,4 @@ public class PullToRefreshAndLoadView extends LinearLayout implements OnTouchLis
         void onRefresh();
     }
 
-    /**
-     * 给加载更多控件注册一个监听器。
-     *
-     * @param listener 监听器的实现。
-     */
-    public void setOnLoadListener(PullToLoadListener listener) {
-        mLoadListener = listener;
-    }
-
-    /**
-     * 当所有的刷新逻辑完成后，记录调用一下，否则你的ListView将一直处于正在刷新状态。
-     */
-    public void finishLoading() {
-        currentStatus = STATUS_REFRESH_FINISHED;
-        setLoading(false);
-    }
-
-    /**
-     * 下拉刷新的监听器，使用下拉刷新的地方应该注册此监听器来获取刷新回调。
-     */
-    public interface PullToLoadListener {
-        /**
-         * 刷新时会去回调此方法，在方法内编写具体的刷新逻辑。注意此方法是在子线程中调用的， 你可以不必另开线程来进行耗时操作。
-         */
-        void onLoad();
-    }
 }
