@@ -83,7 +83,7 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
      */
     private int hideHeaderHeight;
     /**
-     * 需要去下拉刷新的mListView
+     * 需要去下拉刷新的mRecycleView
      */
     private RecyclerView mRecyclerView;
 
@@ -101,7 +101,7 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
      */
     private LAYOUT_MANAGER_TYPE layoutManagerType;
     /**
-     * 当前是否可以下拉，只有mListView滚动到头的时候才允许下拉
+     * 当前是否可以下拉，只有mRecycleView滚动到头的时候才允许下拉
      */
     private boolean ableToPull;
     /**
@@ -140,7 +140,7 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * 进行一些关键性的初始化操作，比如：将下拉头向上偏移进行隐藏，给ListView注册touch事件。
+     * 进行一些关键性的初始化操作，比如：将下拉头向上偏移进行隐藏，给RecycleView注册touch事件。
      */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -219,12 +219,12 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
             // 时刻记得更新下拉头中的信息
             if (currentStatus == STATUS_PULL_TO_REFRESH || currentStatus == STATUS_RELEASE_TO_REFRESH) {
                 updateHeaderView();
-                // 当前正处于下拉或释放状态，要让ListView失去焦点，否则被点击的那一项会一直处于选中状态
+                // 当前正处于下拉或释放状态，要让RecycleView失去焦点，否则被点击的那一项会一直处于选中状态
                 mRecyclerView.setPressed(false);
                 mRecyclerView.setFocusable(false);
                 mRecyclerView.setFocusableInTouchMode(false);
                 lastStatus = currentStatus;
-                // 当前正处于下拉或释放状态，通过返回true屏蔽掉ListView的滚动事件
+                // 当前正处于下拉或释放状态，通过返回true屏蔽掉RecycleView的滚动事件
                 return true;
             }
         }
@@ -285,7 +285,7 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
                     if (!ableToPull) {
                         yDown = event.getRawY();
                     }
-                    // 如果首个元素的上边缘，距离父布局值为0，就说明ListView滚动到了最顶部，此时应该允许下拉刷新
+                    // 如果首个元素的上边缘，距离父布局值为0，就说明RecycleView滚动到了最顶部，此时应该允许下拉刷新
                     ableToPull = true;
                 } else {
                     if (headerLayoutParams.topMargin != hideHeaderHeight) {
@@ -297,9 +297,9 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
                 }
             } else {
                 ableToPull = false;
-                // 如果mListView中没有元素,抛出异常
+                // 如果mRecycleView中没有元素,抛出异常
                 try {
-                    throw new Exception("ListView必须添加一个子布局");
+                    throw new Exception("RecycleView必须添加一个子布局");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -416,7 +416,7 @@ public class PullToRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * 当所有的刷新逻辑完成后，记录调用一下，否则你的ListView将一直处于正在刷新状态。
+     * 当所有的刷新逻辑完成后，记录调用一下，否则你的RecycleView将一直处于正在刷新状态。
      */
     public void finishRefresh() {
         currentStatus = STATUS_REFRESH_FINISHED;
