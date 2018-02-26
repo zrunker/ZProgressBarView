@@ -28,7 +28,10 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshAndL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, SecondActivity.class);
+//        Intent intent = new Intent(this, SecondActivity.class);
+//        startActivity(intent);
+
+        Intent intent = new Intent(this, ThreeActivity.class);
         startActivity(intent);
 
         pullToRefreshAndLoadView = findViewById(R.id.pull);
