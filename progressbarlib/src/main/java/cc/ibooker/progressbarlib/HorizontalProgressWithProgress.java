@@ -91,6 +91,8 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         canvas.save();
         canvas.translate(getPaddingLeft(), getHeight() / 2);// 移动坐标
 
+        mPaint.setAntiAlias(true);
+
         boolean noNeedUnReac = false;
         String text = getProgress() + "级";
         int textWidth = (int) mPaint.measureText(text);
