@@ -124,7 +124,10 @@ public class HorizontalProgressWithProgress2 extends ProgressBar {
                 canvas.drawLine(0, 0, endX, 0, mPaint);
             } else {
                 if (mReachRectF == null)
-                    mReachRectF = new RectF(0, -mReachHeight / 2, endX, mReachHeight / 2);
+                    mReachRectF = new RectF(0, 0, 0, 0);
+                mReachRectF.top = -mReachHeight / 2;
+                mReachRectF.right = endX;
+                mReachRectF.bottom = mReachHeight / 2;
                 canvas.drawRoundRect(mReachRectF, mReachHeight, mReachHeight, mPaint);
             }
         }
@@ -138,7 +141,11 @@ public class HorizontalProgressWithProgress2 extends ProgressBar {
                 canvas.drawLine(start, 0, mReachWidth, 0, mPaint);
             } else {
                 if (mUnReachRectF == null)
-                    mUnReachRectF = new RectF(start, -mUnReachHeight / 2, mReachWidth, mUnReachHeight / 2);
+                    mUnReachRectF = new RectF(0, 0, 0, 0);
+                mUnReachRectF.left = start;
+                mUnReachRectF.top = -mUnReachHeight / 2;
+                mUnReachRectF.right = mReachWidth;
+                mUnReachRectF.bottom = mUnReachHeight / 2;
                 canvas.drawRoundRect(mUnReachRectF, mUnReachHeight, mUnReachHeight, mPaint);
             }
         }
@@ -148,7 +155,11 @@ public class HorizontalProgressWithProgress2 extends ProgressBar {
 
         // draw text bg
         if (outerRect == null)
-            outerRect = new RectF(progressX - mTextOffset, -mTextSize / 2 - 8, progressX + textWidth + mTextOffset, mTextSize / 2 + 8);
+            outerRect = new RectF(0, 0, 0, 0);
+        outerRect.left = progressX - mTextOffset;
+        outerRect.top = -mTextSize / 2 - 8;
+        outerRect.right = progressX + textWidth + mTextOffset;
+        outerRect.bottom = mTextSize / 2 + 8;
         mTextBgPaint.setColor(mTextBgColor);
         canvas.drawRoundRect(outerRect, mTextBgRadius, mTextBgRadius, mTextBgPaint);
 
