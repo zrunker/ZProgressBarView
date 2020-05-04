@@ -3,26 +3,29 @@
 
     <!--带进度的水平进度条-->
     <declare-styleable name="HorizontalProgressWithProgress">
-        <attr name="progress_unreach_color" format="color"/>
-        <attr name="progress_unreach_height" format="dimension"/>
-        <attr name="progress_reach_height" format="dimension"/>
-        <attr name="progress_reach_color" format="color"/>
-        <attr name="progress_text_color" format="color"/>
-        <attr name="progress_text_size" format="dimension"/>
-        <attr name="progress_text_offset" format="dimension"/>
+        <attr name="progress_unreach_color" format="color" />
+        <attr name="progress_unreach_height" format="dimension" />
+        <attr name="progress_reach_height" format="dimension" />
+        <attr name="progress_reach_color" format="color" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_offset" format="dimension" />
+        <attr name="progress_text_suffix" format="string" />
+        <attr name="progress_text_prefix" format="string" />
+        <attr name="progress_text" format="string" />
     </declare-styleable>
 
     <!--带进度的水平进度条2-->
     <declare-styleable name="HorizontalProgressWithProgress2">
-        <attr name="hprogress_unreach_color" format="color"/>
-        <attr name="hprogress_unreach_height" format="dimension"/>
-        <attr name="hprogress_reach_height" format="dimension"/>
-        <attr name="hprogress_reach_color" format="color"/>
-        <attr name="hprogress_text_color" format="color"/>
-        <attr name="hprogress_text_size" format="dimension"/>
-        <attr name="hprogress_text_offset" format="dimension"/>
-        <attr name="hprogress_text_bg_color" format="color"/>
-        <attr name="hprogress_text_bg_radius" format="dimension"/>
-        <attr name="hprogress_isround" format="boolean"/>
+        <attr name="hprogress_unreach_color" format="color" />
+        <attr name="hprogress_unreach_height" format="dimension" />
+        <attr name="hprogress_reach_height" format="dimension" />
+        <attr name="hprogress_reach_color" format="color" />
+        <attr name="hprogress_text_color" format="color" />
+        <attr name="hprogress_text_size" format="dimension" />
+        <attr name="hprogress_text_offset" format="dimension" />
+        <attr name="hprogress_text_bg_color" format="color" />
+        <attr name="hprogress_text_bg_radius" format="dimension" />
+        <attr name="hprogress_isround" format="boolean" />
     </declare-styleable>
 </resources>

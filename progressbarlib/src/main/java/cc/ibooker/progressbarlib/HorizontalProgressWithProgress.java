@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
@@ -28,6 +29,9 @@ public class HorizontalProgressWithProgress extends ProgressBar {
     private int mReachColor = DEFAULT_COLOR_REACH;
     private int mReachHeight = dp2px(DEFAULT_HEIGHT_REACH);
     private int mTextOffset = dp2px(DEFAULT_TEXT_OFFSET);
+    private String mTextSuffix = "%";
+    private String mTextPrefix;
+    private String mText;
 
     private Paint mPaint = new Paint();
     private int mReachWidth;
@@ -59,6 +63,12 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         mReachColor = ta.getColor(R.styleable.HorizontalProgressWithProgress_progress_reach_color, mReachColor);
         mReachHeight = (int) ta.getDimension(R.styleable.HorizontalProgressWithProgress_progress_reach_height, mReachHeight);
         mTextOffset = (int) ta.getDimension(R.styleable.HorizontalProgressWithProgress_progress_text_offset, mTextOffset);
+        String suffix = ta.getString(R.styleable.HorizontalProgressWithProgress_progress_text_suffix);
+        mTextSuffix = suffix == null ? mTextSuffix : suffix;
+        mTextPrefix = ta.getString(R.styleable.HorizontalProgressWithProgress_progress_text_prefix);
+        mTextPrefix = mTextPrefix == null ? "" : mTextPrefix;
+        mText = ta.getString(R.styleable.HorizontalProgressWithProgress_progress_text);
+        mText = mText == null ? "" : mText;
         ta.recycle();
 
         mPaint.setTextSize(mTextSize);
@@ -94,7 +104,11 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         mPaint.setAntiAlias(true);
 
         boolean noNeedUnReac = false;
-        String text = getProgress() + "级";
+        String text = mText;
+        if (TextUtils.isEmpty(text))
+            text = mTextPrefix + getProgress() + mTextSuffix;
+        else
+            text = mTextPrefix + text + mTextSuffix;
         int textWidth = (int) mPaint.measureText(text);
         float radio = getProgress() * 1.0f / getMax();
         float progressX = radio * mReachWidth;
