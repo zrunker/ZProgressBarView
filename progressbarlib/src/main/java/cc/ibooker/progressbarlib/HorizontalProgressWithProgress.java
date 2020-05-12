@@ -74,6 +74,18 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         mPaint.setTextSize(mTextSize);
     }
 
+    public void setText(String mText) {
+        this.mText = mText;
+    }
+
+    public void setTextSuffix(String mTextSuffix) {
+        this.mTextSuffix = mTextSuffix;
+    }
+
+    public void setTextPrefix(String mTextPrefix) {
+        this.mTextPrefix = mTextPrefix;
+    }
+
     /**
      * 控件的测量
      *
