@@ -74,9 +74,71 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         mPaint.setTextSize(mTextSize);
     }
 
-    public HorizontalProgressWithProgress setText(String mText) {
-        this.mText = mText;
+    public int getTextSize() {
+        return mTextSize;
+    }
+
+    public HorizontalProgressWithProgress setTextSize(int mTextSize) {
+        this.mTextSize = mTextSize;
         return this;
+    }
+
+    public int getTextColor() {
+        return mTextColor;
+    }
+
+    public HorizontalProgressWithProgress setTextColor(int mTextColor) {
+        this.mTextColor = mTextColor;
+        return this;
+    }
+
+    public int getUnReachColor() {
+        return mUnReachColor;
+    }
+
+    public HorizontalProgressWithProgress setUnReachColor(int mUnReachColor) {
+        this.mUnReachColor = mUnReachColor;
+        return this;
+    }
+
+    public int getUnReachHeight() {
+        return mUnReachHeight;
+    }
+
+    public HorizontalProgressWithProgress setUnReachHeight(int mUnReachHeight) {
+        this.mUnReachHeight = mUnReachHeight;
+        return this;
+    }
+
+    public int getReachColor() {
+        return mReachColor;
+    }
+
+    public HorizontalProgressWithProgress setReachColor(int mReachColor) {
+        this.mReachColor = mReachColor;
+        return this;
+    }
+
+    public int getReachHeight() {
+        return mReachHeight;
+    }
+
+    public HorizontalProgressWithProgress setReachHeight(int mReachHeight) {
+        this.mReachHeight = mReachHeight;
+        return this;
+    }
+
+    public int getTextOffset() {
+        return mTextOffset;
+    }
+
+    public HorizontalProgressWithProgress setTextOffset(int mTextOffset) {
+        this.mTextOffset = mTextOffset;
+        return this;
+    }
+
+    public String getTextSuffix() {
+        return mTextSuffix;
     }
 
     public HorizontalProgressWithProgress setTextSuffix(String mTextSuffix) {
@@ -84,8 +146,30 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         return this;
     }
 
+    public String getTextPrefix() {
+        return mTextPrefix;
+    }
+
     public HorizontalProgressWithProgress setTextPrefix(String mTextPrefix) {
         this.mTextPrefix = mTextPrefix;
+        return this;
+    }
+
+    public String getText() {
+        return mText;
+    }
+
+    public HorizontalProgressWithProgress setText(String mText) {
+        this.mText = mText;
+        return this;
+    }
+
+    public int getReachWidth() {
+        return mReachWidth;
+    }
+
+    public HorizontalProgressWithProgress setReachWidth(int mReachWidth) {
+        this.mReachWidth = mReachWidth;
         return this;
     }
 
