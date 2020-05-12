@@ -55,6 +55,7 @@ public class ThreeActivity extends AppCompatActivity {
             if (progress >= currentActivity.mPragress) {
                 currentActivity.mProgressHander.removeMessages(MSG_UPDATE_PROGRESS);
             } else {
+                currentActivity.mHProgress.setText(++progress * 1.0f / 100f + "");
                 currentActivity.mHProgress.setProgress(++progress);
                 currentActivity.mProgressHander.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 100);
             }

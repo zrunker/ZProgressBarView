@@ -74,16 +74,19 @@ public class HorizontalProgressWithProgress extends ProgressBar {
         mPaint.setTextSize(mTextSize);
     }
 
-    public void setText(String mText) {
+    public HorizontalProgressWithProgress setText(String mText) {
         this.mText = mText;
+        return this;
     }
 
-    public void setTextSuffix(String mTextSuffix) {
+    public HorizontalProgressWithProgress setTextSuffix(String mTextSuffix) {
         this.mTextSuffix = mTextSuffix;
+        return this;
     }
 
-    public void setTextPrefix(String mTextPrefix) {
+    public HorizontalProgressWithProgress setTextPrefix(String mTextPrefix) {
         this.mTextPrefix = mTextPrefix;
+        return this;
     }
 
     /**
